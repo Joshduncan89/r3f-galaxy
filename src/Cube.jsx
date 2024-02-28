@@ -18,12 +18,12 @@ const Cube = () => {
     <group>
       {envMap && (
         <mesh>
-          <sphereGeometry args={[20, 20, 20, 20]} />
+          <sphereGeometry args={[1, 1, 1, 1]} />
           <meshStandardMaterial attach='material' side={THREE.BackSide} envMap={envMap} map={texture} needsUpdate={true} />
         </mesh>
       )}
       <mesh>
-        <boxBufferGeometry attach='geometry' args={[10, 10, 10]} />
+        <boxBufferGeometry attach='geometry' args={[1, 1, 1]} />
         <meshStandardMaterial attach='material' envMap={envMap} />
       </mesh>
     </group>
