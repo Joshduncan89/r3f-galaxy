@@ -20,8 +20,10 @@ import {
   Scroll,
   Line,
   Html,
+  CameraControls,
   Stars,
 } from "@react-three/drei";
+import { DirectionalLightHelper } from "three";
 import Cube from "./Cube";
 import Moon from "./Moon";
 import Earth from "./Earth";
@@ -42,91 +44,116 @@ import Earth_ from "./Earth_";
 
 const LINE_POINTS = 2000;
 
-// const Scene = () => {
-//   const { scene, camera } = useThree();
-//   const cameraRef = useRef();
-//   const scroll = useScroll();
+const Scene = () => {
+  const { camera, scene } = useThree();
 
-//   const moonPositions = [
-//     new THREE.Vector3(0, 0, -10),
-//     new THREE.Vector3(80, 0, 100),
-//     new THREE.Vector3(150, 0, 250),
-//     new THREE.Vector3(230, 0, 400),
-//   ];
+  // const backTexture = useTexture("/assets/milkyway.jpg");
+  // scene.background = backTexture;
 
-//   const curve = useMemo(() => {
-//     return new THREE.CatmullRomCurve3(moonPositions, false, "catmullrom", 0.5);
-//   });
+  const cameraControlsRef = useRef();
+  const [targetPosition, setTargetPosition] = useState(new THREE.Vector3(0, 0, -10)); // Initial camera position
 
-//   const linepoints = useMemo(() => {
-//     return curve.getPoints(LINE_POINTS);
-//   }, [curve]);
+  // const moonPositions = [
+  //   new THREE.Vector3(0, 0, -10),
+  //   new THREE.Vector3(80, 0, 120),
+  //   new THREE.Vector3(150, 0, 260),
+  //   new THREE.Vector3(230, 0, 410),
+  // ];
 
-//   useFrame((_state, delta) => {
-//     const curPlanetIndex = Math.min(Math.round(scroll?.offset * linepoints.length), linepoints.length - 1);
-//     const curPlanetZ = linepoints[curPlanetIndex];
+  // useEffect(() => {
+  //   cameraControlsRef.current?.lookInDirectionOf(targetPosition.x,targetPosition.y,targetPosition.z,false)
+  // },[targetPosition])
 
-//     const pointAhead = linepoints[Math.min(curPlanetZ + 1), linepoints.length - 1]
+  const { cameraPosition } = useControls({
+    cameraPosition: {
+      value: "Default", // Default camera position
+      options: ["Default", "Position 1", "Position 2", "Position 3"], // List of camera positions
+      onChange: position => {
+        let target;
+        switch (position) {
+          case "Default":
+            target = new THREE.Vector3(0, 0, -10);
+            break;
+          case "Position 1":
+            target = new THREE.Vector3(180, 0, 120);
+            break;
+          case "Position 2":
+            target = new THREE.Vector3(150, 0, 260);
+            break;
+          case "Position 3":
+            target = new THREE.Vector3(230, 0, 410);
+            break;
+          default:
+            break;
+        }
+        setTargetPosition(target);
+      },
+    },
+  });
 
-//     // Calculate the distance between current camera position and target position
-//     const distance = cameraRef.current.position.distanceTo(curPlanetZ);
+  useFrame((_state, delta) => {
+    cameraControlsRef.current?.setLookAt(
+      targetPosition.x,
+      targetPosition.y,
+      targetPosition.z - 5,
+      targetPosition.x,
+      targetPosition.y,
+      targetPosition.z,
+      true
+    );
+    // _state.camera.position.lerp(targetPosition, 0.5);
+    // _state.camera.updateProjectionMatrix();
+    // console.log(cameraControlsRef.current);
+    // if (cameraControlsRef.current) {
+    //   cameraControlsRef.current?.setLookAt(targetPosition, targetPosition);
+    // }
+    // console.log(targetPosition.x, targetPosition.y, targetPosition.z);
+    // console.log(targetPosition);
+  });
 
-//     // Adjust the threshold as needed for when to stop the camera
-//     const stopThreshold = 0.1;
-
-//     if (distance > stopThreshold) {
-//       // Camera is far from the target, interpolate its position
-//       cameraRef.current.position.lerp(curPlanetZ, delta * 24);
-//     } else {
-//       // Camera is close to the target, set its position directly
-//       cameraRef.current.position.set(curPlanetZ.x, curPlanetZ.y, curPlanetZ.z);
-//     }
-
-//     // Make the camera look at the current Moon component
-//     cameraRef.current.lookAt(curPlanetZ);
-//   });
-
-//   return (
-//     <>
-//       {moonPositions.map((position, index) => (
-//         <Moon key={index} position={position} />
-//       ))}
-
-//       <OrbitControls enableZoom={false} />
-//       <group ref={cameraRef}>
-//         <PerspectiveCamera makeDefault position={[0, 0, -10]} fov={40} near={1} far={1000} />
-//       </group>
-//       <hemisphereLight intensity={0.9} color='white' groundColor='black' />
-//     </>
-//   );
-// };
-
-const Scene_ = () => {
   return (
     <>
-      <OrbitControls />
-      <PerspectiveCamera makeDefault position={[0, 0, -10]} fov={40} near={1} far={1000} />
-      {/* <hemisphereLight intensity={0.9} color='white' groundColor='black' /> */}
-      <Earth_ />
+      <CameraControls ref={cameraControlsRef} />
+      {/* {moonPositions.map((position, index) => (
+        <Moon key={index} name={`Moon${index}`} position={position} />
+      ))} */}
+      <Earth_ position={[0, 0, -10]} />
+      <Saturn position={[180, 0, 120]} />
+
+      <hemisphereLight intensity={0.9} color='white' groundColor='black' />
     </>
   );
 };
 
 const App = () => {
   return (
-    <Canvas
-      style={{
-        width: "100%",
-        height: "100%",
-        // backgroundColor: "#37374d",
-      }}
-    >
-      {/* <ScrollControls pages={4} damping={0.3}> */}
-      <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-      <Scene_ />
-      {/* </ScrollControls> */}
+    <Canvas>
+      <Stars radius={300} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+      <Scene />
     </Canvas>
   );
 };
 
 export default App;
+
+// const Scene_ = () => {
+//   const light = useRef();
+
+//   useHelper(light, DirectionalLightHelper, 0.5, "blue");
+
+//   const { x, y, z, int } = useControls({
+//     int: { value: 1.5, min: 0, max: 10, step: 0.1 }, // Adjust min, max, and initial value
+//     x: { value: 1.5, min: -10, max: 10, step: 0.1 },
+//     y: { value: 0.3, min: -10, max: 10, step: 0.1 },
+//     z: { value: -0.6, min: -10, max: 10, step: 0.1 },
+//   });
+
+//   return (
+//     <>
+//       {/* <hemisphereLight intensity={0.9} color='white' groundColor='black' /> */}
+//       <directionalLight intensity={int} position={[x, y, z]} />
+//       <Earth_ />
+//       <Saturn />
+//     </>
+//   );
+// };

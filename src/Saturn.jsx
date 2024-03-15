@@ -2,7 +2,7 @@ import { useTexture, TorusKnot } from "@react-three/drei";
 import { useRef } from "react";
 import * as THREE from "three";
 
-const Saturn = () => {
+const Saturn = ({ position }) => {
   const moonRef = useRef();
 
   // Load textures using drei's useTexture
@@ -16,7 +16,7 @@ const Saturn = () => {
   // });
 
   return (
-    <group position={[0, 0, -10]}>
+    <group position={position}>
       <mesh ref={moonRef}>
         <sphereGeometry args={[2, 32, 32]} />
         <meshStandardMaterial

@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { OrbitControls, Stars, useTexture } from "@react-three/drei";
-import * as THREE from "three";
-
+import { DoubleSide } from "three";
+import { useControls } from "leva";
 import EarthDayMap from "/assets/8k_earth_daymap.jpg";
 import EarthNormalMap from "/assets/8k_earth_normal_map.jpg";
 import EarthSpecularMap from "/assets/8k_earth_specular_map.jpg";
@@ -20,6 +20,12 @@ const Earth_ = () => {
   const earthRef = useRef();
   const cloudsRef = useRef();
 
+  const { tiltx, tilty, tiltz } = useControls({
+    x: { value: 1.5, min: -10, max: 10, step: 0.1 },
+    y: { value: 0.3, min: -10, max: 10, step: 0.1 },
+    z: { value: -0.6, min: -10, max: 10, step: 0.1 },
+  });
+
   useFrame(({ clock }) => {
     const elapsedTime = clock.getElapsedTime();
 
@@ -30,10 +36,10 @@ const Earth_ = () => {
   return (
     <>
       <ambientLight intensity={1} />
-      <pointLight color='#f6f3ea' position={[2, 0, 0]} intensity={1.2} />
+      {/* <pointLight color='#f6f3ea' position={[2, 0, 0]} intensity={1.2} /> */}
       <mesh ref={cloudsRef} position={[0, 0, 3]}>
         <sphereGeometry args={[1.005, 32, 32]} />
-        <meshPhongMaterial map={cloudsMap} opacity={0.4} depthWrite={true} transparent={true} side={THREE.DoubleSide} />
+        <meshPhongMaterial map={cloudsMap} opacity={0.4} depthWrite={true} transparent={true} side={DoubleSide} />
       </mesh>
       <mesh ref={earthRef} position={[0, 0, 3]}>
         <sphereGeometry args={[1, 32, 32]} />
