@@ -1,24 +1,35 @@
-import { useTexture, TorusKnot } from "@react-three/drei";
-import { useRef } from "react";
+import { useTexture, TorusKnot, Ring, Sphere } from "@react-three/drei";
+import { useRef, useEffect } from "react";
 import * as THREE from "three";
 
 const Saturn = ({ position }) => {
   const moonRef = useRef();
+  const ringRef = useRef();
 
   // Load textures using drei's useTexture
   const texture = useTexture("/assets/saturnmap.jpg");
   const ringTex = useTexture("/assets/saturnringcolor.jpg");
   const displacementMap = useTexture("/assets/moon-displacement.jpg");
 
-  // useFrame(() => {
-  //   // Rotate the moon over time
-  //   moonRef.current.rotation.y += 0.001;
-  // });
+  useEffect(() => {
+    // Calculate UVs for the ring geometry
+    const geometry = ringRef.current.geometry;
+    const pos = geometry.attributes.position;
+    const uv = geometry.attributes.uv;
+    const v3 = new THREE.Vector3();
+
+    for (let i = 0; i < pos.count; i++) {
+      v3.fromBufferAttribute(pos, i);
+      uv.setXY(i, v3.length() < 4 ? 0 : 1, 1);
+    }
+
+    // Ensure proper rendering
+    geometry.attributes.uv.needsUpdate = true;
+  }, []);
 
   return (
     <group position={position}>
-      <mesh ref={moonRef}>
-        <sphereGeometry args={[2, 32, 32]} />
+      <Sphere ref={moonRef} args={[2.4, 32, 32]}>
         <meshStandardMaterial
           color={0xf0f0f0}
           map={texture}
@@ -27,11 +38,10 @@ const Saturn = ({ position }) => {
           roughness={1} // Adjust roughness as needed
           metalness={0} // Adjust metalness as needed
         />
-      </mesh>
-      <mesh rotation={[Math.PI / -2.3, 0, 0]}>
-        <torusGeometry args={[3.5, 0.5, 2.5, 100]} />
-        <meshStandardMaterial transparent map={ringTex} opacity={0.7} />
-      </mesh>
+      </Sphere>
+      <Ring ref={ringRef} args={[3, 5, 64]} rotation={[Math.PI / 3, 0, 0]}>
+        <meshBasicMaterial transparent map={ringTex} opacity={0.7} side={THREE.DoubleSide} />
+      </Ring>
     </group>
   );
 };

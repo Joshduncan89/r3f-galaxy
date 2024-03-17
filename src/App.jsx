@@ -2,31 +2,10 @@ import React, { useRef, useEffect, useState, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useControls } from "leva";
 import * as THREE from "three";
-import { gsap } from "gsap";
-import {
-  Box,
-  Environment,
-  OrbitControls,
-  useTexture,
-  useCubeTexture,
-  PerspectiveCamera,
-  Sphere,
-  useHelper,
-  Circle,
-  Billboard,
-  useCamera,
-  ScrollControls,
-  useScroll,
-  Scroll,
-  Line,
-  Html,
-  CameraControls,
-  Stars,
-} from "@react-three/drei";
+
+import { Environment, useTexture, PerspectiveCamera, useHelper, CameraControls, Stars } from "@react-three/drei";
 import { DirectionalLightHelper } from "three";
-import Cube from "./Cube";
-import Moon from "./Moon";
-import Earth from "./Earth";
+
 import Saturn from "./Saturn";
 import Earth_ from "./Earth_";
 
@@ -63,64 +42,68 @@ const Scene = () => {
   // useEffect(() => {
   //   cameraControlsRef.current?.lookInDirectionOf(targetPosition.x,targetPosition.y,targetPosition.z,false)
   // },[targetPosition])
-
   const { cameraPosition } = useControls({
     cameraPosition: {
-      value: "Default", // Default camera position
-      options: ["Default", "Position 1", "Position 2", "Position 3"], // List of camera positions
-      onChange: position => {
-        let target;
-        switch (position) {
-          case "Default":
-            target = new THREE.Vector3(0, 0, -10);
-            break;
-          case "Position 1":
-            target = new THREE.Vector3(180, 0, 120);
-            break;
-          case "Position 2":
-            target = new THREE.Vector3(150, 0, 260);
-            break;
-          case "Position 3":
-            target = new THREE.Vector3(230, 0, 410);
-            break;
-          default:
-            break;
-        }
-        setTargetPosition(target);
-      },
+      value: "Default",
+      options: ["Default", "Position 1", "Position 2", "Position 3"],
+      onChange: position => changeCameraPosition(position),
     },
   });
 
-  useFrame((_state, delta) => {
-    cameraControlsRef.current?.setLookAt(
-      targetPosition.x,
-      targetPosition.y,
-      targetPosition.z - 5,
-      targetPosition.x,
-      targetPosition.y,
-      targetPosition.z,
-      true
-    );
-    // _state.camera.position.lerp(targetPosition, 0.5);
-    // _state.camera.updateProjectionMatrix();
-    // console.log(cameraControlsRef.current);
-    // if (cameraControlsRef.current) {
-    //   cameraControlsRef.current?.setLookAt(targetPosition, targetPosition);
-    // }
-    // console.log(targetPosition.x, targetPosition.y, targetPosition.z);
-    // console.log(targetPosition);
-  });
+  const changeCameraPosition = position => {
+    let target;
+    switch (position) {
+      case "Default":
+        target = new THREE.Vector3(0, 0, -10);
+        break;
+      case "Position 1":
+        target = new THREE.Vector3(180, 0, 120);
+        break;
+      case "Position 2":
+        target = new THREE.Vector3(150, 0, 260);
+        break;
+      case "Position 3":
+        target = new THREE.Vector3(230, 0, 410);
+        break;
+      default:
+        break;
+    }
+    setTargetPosition(target);
+    cameraControlsRef.current?.setLookAt(target.x, target.y, target.z - 5, target.x, target.y, target.z, true);
+  };
+
+  // useFrame((_state, delta) => {
+  //   cameraControlsRef.current?.setLookAt(
+  //     targetPosition.x,
+  //     targetPosition.y,
+  //     targetPosition.z - 5,
+  //     targetPosition.x,
+  //     targetPosition.y,
+  //     targetPosition.z,
+  //     true
+  //   );
+  //   // _state.camera.position.lerp(targetPosition, 0.5);
+  //   // _state.camera.updateProjectionMatrix();
+  //   // console.log(cameraControlsRef.current);
+  //   // if (cameraControlsRef.current) {
+  //   //   cameraControlsRef.current?.setLookAt(targetPosition, targetPosition);
+  //   // }
+  //   // console.log(targetPosition.x, targetPosition.y, targetPosition.z);
+  //   // console.log(targetPosition);
+  // });
 
   return (
     <>
-      <CameraControls ref={cameraControlsRef} />
+      <CameraControls ref={cameraControlsRef} enabled={true} minDistance={0.5} />
       {/* {moonPositions.map((position, index) => (
         <Moon key={index} name={`Moon${index}`} position={position} />
       ))} */}
       <Earth_ position={[0, 0, -10]} />
+      {/* <Earth_ position={[150, 0, 260]} />
+      <Earth_ position={[230, 0, 410]} /> */}
       <Saturn position={[180, 0, 120]} />
 
-      <hemisphereLight intensity={0.9} color='white' groundColor='black' />
+      {/* <hemisphereLight intensity={0.9} color='white' groundColor='black' /> */}
     </>
   );
 };
@@ -128,7 +111,7 @@ const Scene = () => {
 const App = () => {
   return (
     <Canvas>
-      <Stars radius={300} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+      <Stars radius={50} depth={100} count={5000} factor={4} saturation={0} fade speed={1} />
       <Scene />
     </Canvas>
   );
