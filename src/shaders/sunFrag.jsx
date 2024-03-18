@@ -141,10 +141,23 @@ float fbm(vec4 p){
 }
 
 void main(){
-    vec4 p = vec4(vPosition *0.5,time*0.05);
-    float noisy = fbm(p);;
+    vec4 p = vec4(vPosition * 0.2, time * 0.05);
+    float noisy = fbm(p);
+    vec4 p1 = vec4(vPosition * 0.3, time * 0.08);
+    float spots =  max(snoise(p1), 0.);
+    
 
-    gl_FragColor = vec4(noisy);
+    vec3 minColor = vec3(1.0, 0.8, 0.0); // Yellow
+    vec3 maxColor = vec3(1.0, 0.5, 0.0); // Orange
+
+    float reversedNoisy = 1.0 - noisy;
+
+    vec3 sunColor = mix(minColor, maxColor, noisy);
+    
+    // Apply the spots effect
+    sunColor *= mix(1.0, spots, 0.7);
+    
+    gl_FragColor = vec4(sunColor, 1.0);
 }
 `;
 

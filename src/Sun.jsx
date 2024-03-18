@@ -10,7 +10,7 @@ import { getFresnelMat } from "./functions/getFresnel";
 const Sun = ({ position }) => {
   const sunRef = useRef();
   const matRef = useRef();
-  const fresnel = getFresnelMat({ rimColor: "#FFA500", facingColor: "#FF6600", fresnelBias: 0.4, fresnelPower: 4.0, fresnelScale: 2.0 });
+  //   const fresnelShader = getFresnelMat({ rimHex: "#FFA500", facingHex: "#FF6600", fresnelScale: 4.0, fresnelBias: 0.3, fresnelPower: 4.0 });
 
   // Load textures using drei's useTexture
   const texture = useTexture("/assets/sunmap.jpg");
@@ -33,7 +33,7 @@ const Sun = ({ position }) => {
         {/* <meshStandardMaterial emissive={0xffff00} emissiveIntensity={2} map={texture} />*/}
         <shaderMaterial ref={matRef} fragmentShader={sunFragment} vertexShader={vertex} uniforms={uniforms.current} />
       </Sphere>
-      {/* <mesh material={fresnel}>
+      {/* <mesh material={fresnelShader}>
         <sphereGeometry args={[24, 32, 32]} />
       </mesh> */}
     </group>

@@ -44,14 +44,14 @@ const Earth_ = ({ position }) => {
   const earthLightsRef = useRef();
   const fresnelRef = useRef();
 
-  useHelper(lightRef, DirectionalLightHelper, 0.05, "white");
+  // useHelper(lightRef, DirectionalLightHelper, 0.05, "white");
 
-  const { x, y, z, int } = useControls({
-    x: { value: 12, min: -50, max: 50, step: 0.1 },
-    y: { value: 5, min: -50, max: 50, step: 0.1 },
-    z: { value: -8, min: -50, max: 50, step: 0.1 },
-    int: { value: 1.4, min: -15, max: 15, step: 0.1 },
-  });
+  // const { x, y, z, int } = useControls({
+  //   x: { value: 12, min: -50, max: 50, step: 0.1 },
+  //   y: { value: 5, min: -50, max: 50, step: 0.1 },
+  //   z: { value: -8, min: -50, max: 50, step: 0.1 },
+  //   int: { value: 1.4, min: -15, max: 15, step: 0.1 },
+  // });
 
   useFrame(({ clock }) => {
     const elapsedTime = clock.getElapsedTime();
@@ -75,7 +75,7 @@ const Earth_ = ({ position }) => {
 
   return (
     <>
-      <directionalLight color={0xffffff} position={[x, y, z]} intensity={int} ref={lightRef} />
+      <directionalLight color={0xffffff} position={[12, 5, -8]} intensity={1.4} ref={lightRef} />
       <group position={position} rotateZ={(-23.4 * Math.PI) / 180} ref={groupRef}>
         {/* <ambientLight intensity={1} /> */}
 

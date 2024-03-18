@@ -9,6 +9,7 @@ import { DirectionalLightHelper } from "three";
 import Saturn from "./Saturn";
 import Earth_ from "./Earth_";
 import Sun from "./Sun";
+import MilkyWay from "./MilkyWay";
 
 // const planetData = [
 //   { name: "Mercury", diameter: 4879, distance: 57.9 },
@@ -76,9 +77,7 @@ const Scene = () => {
   return (
     <>
       <CameraControls ref={cameraControlsRef} enabled={true} minDistance={0.5} />
-      {/* {moonPositions.map((position, index) => (
-        <Moon key={index} name={`Moon${index}`} position={position} />
-      ))} */}
+      <MilkyWay />
       <Sun />
       <Earth_ position={[0, 0, -10]} />
       {/* <Earth_ position={[150, 0, 260]} />
