@@ -46,13 +46,11 @@ const Earth_ = ({ position }) => {
 
   useHelper(lightRef, DirectionalLightHelper, 0.05, "white");
 
-  const { x, y, z, int, dist, dec } = useControls({
-    x: { value: 11, min: -50, max: 50, step: 0.1 },
+  const { x, y, z, int } = useControls({
+    x: { value: 12, min: -50, max: 50, step: 0.1 },
     y: { value: 5, min: -50, max: 50, step: 0.1 },
     z: { value: -8, min: -50, max: 50, step: 0.1 },
-    int: { value: 1, min: -15, max: 15, step: 0.1 },
-    dist: { value: 1, min: -15, max: -15, step: 0.1 },
-    dec: { value: 1, min: -15, max: -15, step: 0.1 },
+    int: { value: 1.4, min: -15, max: 15, step: 0.1 },
   });
 
   useFrame(({ clock }) => {

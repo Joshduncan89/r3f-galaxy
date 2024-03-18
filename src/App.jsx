@@ -8,6 +8,7 @@ import { DirectionalLightHelper } from "three";
 
 import Saturn from "./Saturn";
 import Earth_ from "./Earth_";
+import Sun from "./Sun";
 
 // const planetData = [
 //   { name: "Mercury", diameter: 4879, distance: 57.9 },
@@ -72,32 +73,13 @@ const Scene = () => {
     cameraControlsRef.current?.setLookAt(target.x, target.y, target.z - 5, target.x, target.y, target.z, true);
   };
 
-  // useFrame((_state, delta) => {
-  //   cameraControlsRef.current?.setLookAt(
-  //     targetPosition.x,
-  //     targetPosition.y,
-  //     targetPosition.z - 5,
-  //     targetPosition.x,
-  //     targetPosition.y,
-  //     targetPosition.z,
-  //     true
-  //   );
-  //   // _state.camera.position.lerp(targetPosition, 0.5);
-  //   // _state.camera.updateProjectionMatrix();
-  //   // console.log(cameraControlsRef.current);
-  //   // if (cameraControlsRef.current) {
-  //   //   cameraControlsRef.current?.setLookAt(targetPosition, targetPosition);
-  //   // }
-  //   // console.log(targetPosition.x, targetPosition.y, targetPosition.z);
-  //   // console.log(targetPosition);
-  // });
-
   return (
     <>
       <CameraControls ref={cameraControlsRef} enabled={true} minDistance={0.5} />
       {/* {moonPositions.map((position, index) => (
         <Moon key={index} name={`Moon${index}`} position={position} />
       ))} */}
+      <Sun position={[0, 0, -50]} />
       <Earth_ position={[0, 0, -10]} />
       {/* <Earth_ position={[150, 0, 260]} />
       <Earth_ position={[230, 0, 410]} /> */}
