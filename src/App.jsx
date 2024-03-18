@@ -79,7 +79,7 @@ const Scene = () => {
       {/* {moonPositions.map((position, index) => (
         <Moon key={index} name={`Moon${index}`} position={position} />
       ))} */}
-      <Sun position={[0, 0, -50]} />
+      <Sun />
       <Earth_ position={[0, 0, -10]} />
       {/* <Earth_ position={[150, 0, 260]} />
       <Earth_ position={[230, 0, 410]} /> */}
